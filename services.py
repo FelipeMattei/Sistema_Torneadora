@@ -218,6 +218,98 @@ class SistemaFinanceiro:
             data_ref,
         )
 
+    # ========= NOVOS MÉTODOS: FILTRAGEM POR RANGE DE DATAS =========
+
+    def listar_recebimentos_por_data(
+        self, 
+        data_inicio: Optional[date] = None, 
+        data_fim: Optional[date] = None
+    ) -> List[Recebimento]:
+        """
+        Lista recebimentos dentro de um intervalo de datas.
+        
+        Args:
+            data_inicio: Data inicial (inclusive). Se None, sem limite inferior.
+            data_fim: Data final (inclusive). Se None, sem limite superior.
+            
+        Returns:
+            Lista de recebimentos filtrados
+        """
+        recebimentos = self.listar_recebimentos()
+        
+        if data_inicio is None and data_fim is None:
+            return recebimentos
+        
+        resultado = []
+        for r in recebimentos:
+            if data_inicio and r.data < data_inicio:
+                continue
+            if data_fim and r.data  > data_fim:
+                continue
+            resultado.append(r)
+        
+        return resultado
+
+    def listar_despesas_por_data(
+        self, 
+        data_inicio: Optional[date] = None, 
+        data_fim: Optional[date] = None
+    ) -> List[Despesa]:
+        """
+        Lista despesas dentro de um intervalo de datas.
+        
+        Args:
+            data_inicio: Data inicial (inclusive). Se None, sem limite inferior.
+            data_fim: Data final (inclusive). Se None, sem limite superior.
+            
+        Returns:
+            Lista de despesas filtradas
+        """
+        despesas = self.listar_despesas()
+        
+        if data_inicio is None and data_fim is None:
+            return despesas
+        
+        resultado = []
+        for d in despesas:
+            if data_inicio and d.data < data_inicio:
+                continue
+            if data_fim and d.data > data_fim:
+                continue
+            resultado.append(d)
+        
+        return resultado
+
+    def listar_ordens_servico_por_data(
+        self, 
+        data_inicio: Optional[date] = None, 
+        data_fim: Optional[date] = None
+    ) -> List[OrdemServico]:
+        """
+        Lista ordens de serviço dentro de um intervalo de datas.
+        
+        Args:
+            data_inicio: Data inicial (inclusive). Se None, sem limite inferior.
+            data_fim: Data final (inclusive). Se None, sem limite superior.
+            
+        Returns:
+            Lista de ordens de serviço filtradas
+        """
+        ordens = self.listar_ordens_servico()
+        
+        if data_inicio is None and data_fim is None:
+            return ordens
+        
+        resultado = []
+        for o in ordens:
+            if data_inicio and o.data < data_inicio:
+                continue
+            if data_fim and o.data > data_fim:
+                continue
+            resultado.append(o)
+        
+        return resultado
+
     # ========= FUNÇÕES DE APOIO / RESUMO =========
 
     def calcular_saldo(self) -> float:
