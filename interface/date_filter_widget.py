@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QDate, Signal
 from datetime import date
 from typing import Tuple
+from PySide6.QtCore import QLocale
 
 
 class DateFilterWidget(QWidget):
@@ -47,6 +48,7 @@ class DateFilterWidget(QWidget):
         self.date_edit.setDate(QDate.currentDate())
         self.date_edit.setFixedHeight(36)
         self.date_edit.dateChanged.connect(self._on_date_changed)
+        self.date_edit.setLocale(QLocale(QLocale.Portuguese, QLocale.Brazil))
         layout.addWidget(self.date_edit)
         
         # Label de informação sobre o filtro atual
@@ -95,7 +97,7 @@ class DateFilterWidget(QWidget):
         if modo == "Dia":
             self.lbl_info.setText(f"Exato: {qd.day():02d}/{qd.month():02d}/{qd.year()}")
         elif modo == "Mês":
-            mes_nome = qd.toString("MMMM yyyy")
+            mes_nome = QLocale(QLocale.Portuguese, QLocale.Brazil).toString(qd, "MMMM yyyy")
             self.lbl_info.setText(f"Todo o mês: {mes_nome}")
         elif modo == "Ano":
             self.lbl_info.setText(f"Todo o ano: {qd.year()}")

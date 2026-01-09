@@ -19,7 +19,7 @@ from interface.styles import DIALOG_STYLES
 from interface.helpers import _date_to_str
 from interface.dialogs.details import DetalheLancamentoDialog
 from interface.date_filter_widget import DateFilterWidget
-from csv_generator import gerar_csv_relatorio
+from excel_generator import gerar_excel_relatorio
 
 # ===================== BASE RELATÓRIO =====================
 
@@ -120,10 +120,10 @@ class RelatorioReceitasDialog(BaseRelatorioDialog):
         footer.addWidget(self.lbl_total)
         footer.addStretch()
         
-        # Botão para exportar CSV
-        btn_csv = QPushButton("Exportar CSV", objectName="secondaryButton")
-        btn_csv.clicked.connect(self._exportar_csv)
-        footer.addWidget(btn_csv)
+        # Botão para exportar Excel
+        btn_excel = QPushButton("Exportar Excel", objectName="secondaryButton")
+        btn_excel.clicked.connect(self._exportar_excel)
+        footer.addWidget(btn_excel)
         
         footer.addWidget(self.btn_atualizar)
         self.layout_card.addLayout(footer)
@@ -165,10 +165,10 @@ class RelatorioReceitasDialog(BaseRelatorioDialog):
             
         self.lbl_total.setText(f"Total das receitas: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
-    def _exportar_csv(self):
-        """Exporta CSV do relatório de receitas."""
+    def _exportar_excel(self):
+        """Exporta Excel do relatório de receitas."""
         caminho, _ = QFileDialog.getSaveFileName(
-            self, "Salvar CSV", "relatorio_receitas.csv", "CSV Files (*.csv)"
+            self, "Salvar Excel", "relatorio_receitas.xlsx", "Excel Files (*.xlsx)"
         )
         if not caminho:
             return
@@ -181,26 +181,21 @@ class RelatorioReceitasDialog(BaseRelatorioDialog):
         total = 0.0
         
         for r in recebimentos:
-            linhas.append((_date_to_str(r.data), r.valor, r.forma_pagamento.value))
+            linhas.append((r.data, r.valor, r.forma_pagamento.value))
             total += r.valor
         
-        # Descrição do período
         modo = self.date_filter.get_modo_texto()
-        if modo == "Tudo":
-            periodo = "Todos os registros"
-        else:
-            periodo = self.date_filter.lbl_info.text()
-        
+        periodo = "Todos os registros" if modo == "Tudo" else self.date_filter.lbl_info.text()
         saldo = f"Total das receitas: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
         
-        sucesso = gerar_csv_relatorio(
+        sucesso = gerar_excel_relatorio(
             caminho, "Relatório de Receitas", periodo, saldo, colunas, linhas
         )
         
         if sucesso:
-            QMessageBox.information(self, "Sucesso", f"CSV exportado com sucesso!\n{caminho}")
+            QMessageBox.information(self, "Sucesso", f"Excel exportado com sucesso!\n{caminho}")
         else:
-            QMessageBox.critical(self, "Erro", "Erro ao exportar CSV.")
+            QMessageBox.critical(self, "Erro", "Erro ao exportar Excel.")
 
 
 # ===================== RELATÓRIO DESPESAS =====================
@@ -220,9 +215,9 @@ class RelatorioDespesasDialog(BaseRelatorioDialog):
         footer.addWidget(self.lbl_total)
         footer.addStretch()
         
-        btn_csv = QPushButton("Exportar CSV", objectName="secondaryButton")
-        btn_csv.clicked.connect(self._exportar_csv)
-        footer.addWidget(btn_csv)
+        btn_excel = QPushButton("Exportar Excel", objectName="secondaryButton")
+        btn_excel.clicked.connect(self._exportar_excel)
+        footer.addWidget(btn_excel)
         
         footer.addWidget(self.btn_atualizar)
         self.layout_card.addLayout(footer)
@@ -267,10 +262,10 @@ class RelatorioDespesasDialog(BaseRelatorioDialog):
             
         self.lbl_total.setText(f"Total das despesas: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
-    def _exportar_csv(self):
-        """Exporta CSV do relatório de despesas."""
+    def _exportar_excel(self):
+        """Exporta Excel do relatório de despesas."""
         caminho, _ = QFileDialog.getSaveFileName(
-            self, "Salvar CSV", "relatorio_despesas.csv", "CSV Files (*.csv)"
+            self, "Salvar Excel", "relatorio_despesas.xlsx", "Excel Files (*.xlsx)"
         )
         if not caminho:
             return
@@ -284,19 +279,19 @@ class RelatorioDespesasDialog(BaseRelatorioDialog):
         
         for d in despesas:
             prazo = "Sim" if d.eh_a_prazo else "Não"
-            linhas.append((_date_to_str(d.data), d.descricao, d.valor, d.forma_pagamento.value, prazo))
+            linhas.append((d.data, d.descricao, d.valor, d.forma_pagamento.value, prazo))
             total += d.valor
         
         modo = self.date_filter.get_modo_texto()
         periodo = "Todos os registros" if modo == "Tudo" else self.date_filter.lbl_info.text()
         saldo = f"Total das despesas: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
         
-        sucesso = gerar_csv_relatorio(caminho, "Relatório de Despesas", periodo, saldo, colunas, linhas)
+        sucesso = gerar_excel_relatorio(caminho, "Relatório de Despesas", periodo, saldo, colunas, linhas)
         
         if sucesso:
-            QMessageBox.information(self, "Sucesso", f"CSV exportado com sucesso!\n{caminho}")
+            QMessageBox.information(self, "Sucesso", f"Excel exportado com sucesso!\n{caminho}")
         else:
-            QMessageBox.critical(self, "Erro", "Erro ao exportar CSV.")
+            QMessageBox.critical(self, "Erro", "Erro ao exportar Excel.")
 
 
 # ===================== RELATÓRIO NOTAS =====================
@@ -316,9 +311,9 @@ class RelatorioNotasDialog(BaseRelatorioDialog):
         footer.addWidget(self.lbl_total)
         footer.addStretch()
         
-        btn_csv = QPushButton("Exportar CSV", objectName="secondaryButton")
-        btn_csv.clicked.connect(self._exportar_csv)
-        footer.addWidget(btn_csv)
+        btn_excel = QPushButton("Exportar Excel", objectName="secondaryButton")
+        btn_excel.clicked.connect(self._exportar_excel)
+        footer.addWidget(btn_excel)
         
         footer.addWidget(self.btn_atualizar)
         self.layout_card.addLayout(footer)
@@ -363,10 +358,10 @@ class RelatorioNotasDialog(BaseRelatorioDialog):
             
         self.lbl_total.setText(f"Total das notas: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
-    def _exportar_csv(self):
-        """Exporta CSV do relatório de notas de serviço."""
+    def _exportar_excel(self):
+        """Exporta Excel do relatório de notas de serviço."""
         caminho, _ = QFileDialog.getSaveFileName(
-            self, "Salvar CSV", "relatorio_notas_servico.csv", "CSV Files (*.csv)"
+            self, "Salvar Excel", "relatorio_notas_servico.xlsx", "Excel Files (*.xlsx)"
         )
         if not caminho:
             return
@@ -380,19 +375,19 @@ class RelatorioNotasDialog(BaseRelatorioDialog):
         
         for n in ordens:
             sit = "Paga" if n.foi_pago else "Não paga"
-            linhas.append((n.cliente, n.valor_total, sit, _date_to_str(n.data)))
+            linhas.append((n.cliente, n.valor_total, sit, n.data))
             total += n.valor_total
         
         modo = self.date_filter.get_modo_texto()
         periodo = "Todos os registros" if modo == "Tudo" else self.date_filter.lbl_info.text()
         saldo = f"Total das notas: R$ {total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
         
-        sucesso = gerar_csv_relatorio(caminho, "Relatório de Notas de Serviço", periodo, saldo, colunas, linhas)
+        sucesso = gerar_excel_relatorio(caminho, "Relatório de Notas de Serviço", periodo, saldo, colunas, linhas)
         
         if sucesso:
-            QMessageBox.information(self, "Sucesso", f"CSV exportado com sucesso!\n{caminho}")
+            QMessageBox.information(self, "Sucesso", f"Excel exportado com sucesso!\n{caminho}")
         else:
-            QMessageBox.critical(self, "Erro", "Erro ao exportar CSV.")
+            QMessageBox.critical(self, "Erro", "Erro ao exportar Excel.")
 
 
 # ===================== RELATÓRIO GERAL =====================
@@ -428,9 +423,9 @@ class RelatorioGeralDialog(BaseRelatorioDialog):
         footer.addWidget(self.lbl_saldo)
         footer.addStretch()
         
-        btn_csv = QPushButton("Exportar CSV", objectName="secondaryButton")
-        btn_csv.clicked.connect(self._exportar_csv)
-        footer.addWidget(btn_csv)
+        btn_excel = QPushButton("Exportar Excel", objectName="secondaryButton")
+        btn_excel.clicked.connect(self._exportar_excel)
+        footer.addWidget(btn_excel)
         
         self.layout_card.addLayout(footer)
         
@@ -501,10 +496,10 @@ class RelatorioGeralDialog(BaseRelatorioDialog):
         saldo = self.sistema.calcular_saldo()
         self.lbl_saldo.setText(f"Saldo (Receitas - Despesas): R$ {saldo:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     
-    def _exportar_csv(self):
-        """Exporta CSV do relatório geral."""
+    def _exportar_excel(self):
+        """Exporta Excel do relatório geral."""
         caminho, _ = QFileDialog.getSaveFileName(
-            self, "Salvar CSV", "relatorio_geral.csv", "CSV Files (*.csv)"
+            self, "Salvar Excel", "relatorio_geral.xlsx", "Excel Files (*.xlsx)"
         )
         if not caminho:
             return
@@ -520,7 +515,7 @@ class RelatorioGeralDialog(BaseRelatorioDialog):
         if self.chk_receitas.isChecked():
             recebimentos = self.sistema.listar_recebimentos_por_data(data_inicio, data_fim)
             for r in recebimentos:
-                linhas.append(("Receita", str(r.id or ""), _date_to_str(r.data), 
+                linhas.append(("Receita", str(r.id or ""), r.data, 
                               f"Recebimento ({r.forma_pagamento.value})", r.valor))
                 total_receitas += r.valor
         
@@ -528,7 +523,7 @@ class RelatorioGeralDialog(BaseRelatorioDialog):
         if self.chk_despesas.isChecked():
             despesas = self.sistema.listar_despesas_por_data(data_inicio, data_fim)
             for d in despesas:
-                linhas.append(("Despesa", str(d.id or ""), _date_to_str(d.data), 
+                linhas.append(("Despesa", str(d.id or ""), d.data, 
                               d.descricao, -abs(d.valor)))
                 total_despesas += d.valor
         
@@ -546,9 +541,9 @@ class RelatorioGeralDialog(BaseRelatorioDialog):
         saldo = total_receitas - total_despesas
         saldo_texto = f"Saldo (Receitas - Despesas): R$ {saldo:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
         
-        sucesso = gerar_csv_relatorio(caminho, "Relatório Geral", periodo, saldo_texto, colunas, linhas)
+        sucesso = gerar_excel_relatorio(caminho, "Relatório Geral", periodo, saldo_texto, colunas, linhas)
         
         if sucesso:
-            QMessageBox.information(self, "Sucesso", f"CSV exportado com sucesso!\n{caminho}")
+            QMessageBox.information(self, "Sucesso", f"Excel exportado com sucesso!\n{caminho}")
         else:
-            QMessageBox.critical(self, "Erro", "Erro ao exportar CSV.")
+            QMessageBox.critical(self, "Erro", "Erro ao exportar Excel.")
