@@ -16,6 +16,7 @@ DIALOG_STYLES = """
 QDialog#novaReceitaDialog,
 QDialog#novaDespesaDialog,
 QDialog#novaNotaServicoDialog,
+QDialog#addEditEmployeeDialog,
 QDialog#relatorioGeralDialog {
     background: transparent;
 }
@@ -104,9 +105,9 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(icons/right-arrow.png); /* Certifique-se que o ícone existe ou remova */
-    width: 14px;
-    height: 14px;
+    image: url(icons/down-arrow.png); /* Certifique-se que o ícone existe ou remova */
+    width: 10px;
+    height: 10px;
 }
 
 /* 
@@ -125,9 +126,45 @@ QDateEdit::drop-down {
 }
 
 QDateEdit::down-arrow {
-    image: url(icons/right-arrow.png);
-    width: 14px;
-    height: 14px;
+    image: url(icons/down-arrow.png);
+    width: 10px;
+    height: 10px;
+}
+
+/* 
+   --- CALENDAR WIDGET ---
+   Estilo crítico para corrigir calendário escuro/ilegível
+*/
+QCalendarWidget QWidget {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+QCalendarWidget QToolButton {
+    color: #333333;
+    background: transparent;
+    icon-size: 20px;
+}
+
+QCalendarWidget QMenu {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+QCalendarWidget QSpinBox {
+    background-color: #ffffff;
+    color: #333333;
+    selection-background-color: #00b33c;
+    selection-color: #ffffff;
+}
+
+/* Cabeçalho dos dias da semana (S, T, Q...) */
+QCalendarWidget QTableView {
+    background-color: #ffffff;
+    color: #333333;
+    selection-background-color: #00b33c;
+    selection-color: #ffffff;
+    gridline-color: #d0d0d0;
 }
 
 /* 
@@ -200,5 +237,152 @@ QCheckBox#prazoCheck, QCheckBox#PagoCheck {
 
 QCheckBox#prazoCheck::indicator, QCheckBox#PagoCheck::indicator {
     margin-top: 0px;
+}
+
+/*
+    --- SCROLLBAR (Barra de Rolagem Moderna) ---
+*/
+QScrollBar:vertical {
+    border: none;
+    background: #f0f0f0;
+    width: 6px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 3px;
+}
+QScrollBar::handle:vertical {
+    background: #c1c1c1;
+    min-height: 20px;
+    border-radius: 3px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #a8a8a8;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+    background: none;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/*
+    --- SPINBOX (Seleção Numérica) ---
+*/
+QSpinBox {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #d0d0d0;
+    padding: 8px 12px;
+    color: #333;
+}
+QSpinBox:focus {
+    border: 1px solid #00b33c;
+}
+
+/* Setas do SpinBox */
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 25px;
+    border-left: 1px solid #d0d0d0;
+    border-top-right-radius: 10px;
+    background: transparent;
+    margin-bottom: 1px;
+}
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 25px;
+    border-left: 1px solid #d0d0d0;
+    border-bottom-right-radius: 10px;
+    background: transparent;
+    margin-top: 1px;
+}
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #f0f0f0;
+}
+/* Icones simples para as setas (pode usar imagem se tiver, ou seta ascii/triangulo built-in)
+   O Qt padrão desenha setas se não definirmos imagem, mas as vezes fica feio.
+   Vamos tentar usar empty image e deixar o Qt desenhar a seta padrão clean ou definir cor.*/
+QSpinBox::up-arrow {
+    image: url(icons/up-arrow.png);
+    width: 10px; height: 10px;
+}
+QSpinBox::down-arrow {
+    image: url(icons/down-arrow.png);
+    width: 10px; height: 10px;
+}
+
+/* 
+   --- CORREÇÃO DE CORES (Inputs) ---
+   Garantir fundo branco e texto escuro
+*/
+QLineEdit, QComboBox, QDateEdit, QSpinBox {
+    color: #333333;
+    background-color: #ffffff;
+}
+
+/* Popup do ComboBox (fundo branco explícito) */
+QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    border: 1px solid #d0d0d0;
+    selection-background-color: #00b33c;
+    selection-color: #ffffff;
+    color: #333333;
+    outline: none;
+}
+
+/*
+    --- MAIN WINDOW STYLES ---
+    Estilos para a interface principal moderna
+*/
+
+/* Header */
+QFrame#mainHeader {
+    background-color: #2B4B7C;
+}
+
+/* Sidebar */
+QFrame#sidebar {
+    background-color: #FFFFFF;
+    border-right: 1px solid #E0E0E0;
+}
+
+/* Sidebar item hover */
+QPushButton#sidebarItem {
+    text-align: left;
+    padding-left: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4A4A4A;
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+}
+
+QPushButton#sidebarItem:hover {
+    background-color: #F0F4F8;
+    border-left: 3px solid #2B4B7C;
+    color: #2B4B7C;
+}
+
+/* Financial Cards */
+QFrame#financialCard {
+    background-color: white;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+}
+
+/* Action buttons */
+QPushButton#actionButton {
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 20px;
+    border: none;
+}
+
+QPushButton#actionButton:hover {
+    opacity: 0.9;
 }
 """

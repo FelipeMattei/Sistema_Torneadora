@@ -11,7 +11,8 @@ from datetime import date
 from typing import List
 
 from database import Database
-from models import Recebimento, Despesa, OrdemServico, FormaPagamento
+from models import Recebimento, Despesa, OrdemServico, FormaPagamento, Funcionario
+
 
 
 
@@ -252,6 +253,109 @@ class OrdemServicoRepositorio:
         """
         fp_val = forma_pagamento.value if forma_pagamento else None
         self.db.executar(sql, (fp_val, os_id))
+
+
+class FuncionarioRepositorio:
+    def __init__(self, db: Database):
+        self.db = db
+
+    def criar(self, func: Funcionario) -> int:
+        sql = """
+            INSERT INTO funcionarios (
+                nome,
+                cpf,
+                telefone,
+                cargo,
+                foto_caminho,
+                data_admissao,
+                dia_pagamento,
+                mes_decimo_terceiro,
+                mes_ferias,
+                data_demissao
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        params = (
+            func.nome,
+            func.cpf,
+            func.telefone,
+            func.cargo,
+            func.foto_caminho,
+            func.data_admissao.isoformat(),
+            func.dia_pagamento,
+            func.mes_decimo_terceiro,
+            func.mes_ferias,
+            func.data_demissao.isoformat() if func.data_demissao else None
+        )
+        return self.db.executar(sql, params)
+
+    def atualizar(self, func: Funcionario) -> None:
+        if func.id is None:
+            raise ValueError("Funcionário precisa ter id para atualizar.")
+        sql = """
+            UPDATE funcionarios
+            SET nome = ?,
+                cpf = ?,
+                telefone = ?,
+                cargo = ?,
+                foto_caminho = ?,
+                data_admissao = ?,
+                dia_pagamento = ?,
+                mes_decimo_terceiro = ?,
+                mes_ferias = ?,
+                data_demissao = ?
+            WHERE id = ?
+        """
+        params = (
+            func.nome,
+            func.cpf,
+            func.telefone,
+            func.cargo,
+            func.foto_caminho,
+            func.data_admissao.isoformat(),
+            func.dia_pagamento,
+            func.mes_decimo_terceiro,
+            func.mes_ferias,
+            func.data_demissao.isoformat() if func.data_demissao else None,
+            func.id,
+        )
+        self.db.executar(sql, params)
+
+    def listar_todos(self) -> List[Funcionario]:
+        sql = """
+            SELECT id,
+                   nome,
+                   cpf,
+                   telefone,
+                   cargo,
+                   foto_caminho,
+                   data_admissao,
+                   dia_pagamento,
+                   mes_decimo_terceiro,
+                   mes_ferias,
+                   data_demissao
+            FROM funcionarios
+        """
+        rows = self.db.consultar(sql)
+        funcionarios = []
+        for r in rows:
+            funcionarios.append(
+                Funcionario(
+                    id=r[0],
+                    nome=r[1],
+                    cpf=r[2],
+                    telefone=r[3],
+                    cargo=r[4],
+                    foto_caminho=r[5],
+                    data_admissao=date.fromisoformat(r[6]),
+                    dia_pagamento=r[7],
+                    mes_decimo_terceiro=r[8],
+                    mes_ferias=r[9],
+                    data_demissao=date.fromisoformat(r[10]) if r[10] else None
+                )
+            )
+        return funcionarios
+
 
 
 

@@ -104,11 +104,16 @@ class BaseRelatorioDialog(QDialog):
 # ===================== RELATÓRIO RECEITAS =====================
 
 class RelatorioReceitasDialog(BaseRelatorioDialog):
-    def __init__(self, sistema, parent=None):
+    def __init__(self, sistema, parent=None, filtro_inicial=None):
         super().__init__(sistema, "Relatório de receitas", parent)
         
         # Filtro de data
         self.layout_card.addWidget(self._add_date_filter())
+        
+        if filtro_inicial:
+            self.date_filter.blockSignals(True)
+            self.date_filter.set_modo(filtro_inicial)
+            self.date_filter.blockSignals(False)
         self.btn_atualizar = QPushButton("Atualizar", objectName="secondaryButton")
         self.btn_atualizar.clicked.connect(self.carregar_dados)
         
@@ -201,10 +206,15 @@ class RelatorioReceitasDialog(BaseRelatorioDialog):
 # ===================== RELATÓRIO DESPESAS =====================
 
 class RelatorioDespesasDialog(BaseRelatorioDialog):
-    def __init__(self, sistema, parent=None):
+    def __init__(self, sistema, parent=None, filtro_inicial=None):
         super().__init__(sistema, "Relatório de despesas", parent)
         
         self.layout_card.addWidget(self._add_date_filter())
+        
+        if filtro_inicial:
+            self.date_filter.blockSignals(True)
+            self.date_filter.set_modo(filtro_inicial)
+            self.date_filter.blockSignals(False)
         self.btn_atualizar = QPushButton("Atualizar", objectName="secondaryButton")
         self.btn_atualizar.clicked.connect(self.carregar_dados)
         
@@ -393,11 +403,16 @@ class RelatorioNotasDialog(BaseRelatorioDialog):
 # ===================== RELATÓRIO GERAL =====================
 
 class RelatorioGeralDialog(BaseRelatorioDialog):
-    def __init__(self, sistema, parent=None):
+    def __init__(self, sistema, parent=None, filtro_inicial=None):
         super().__init__(sistema, "Relatório geral", parent)
         
         # Filtros extras
         self.layout_card.addWidget(self._add_date_filter())
+        
+        if filtro_inicial:
+            self.date_filter.blockSignals(True)
+            self.date_filter.set_modo(filtro_inicial)
+            self.date_filter.blockSignals(False)
         
         row_opts = QHBoxLayout()
         row_opts.addWidget(QLabel("Incluir:"))

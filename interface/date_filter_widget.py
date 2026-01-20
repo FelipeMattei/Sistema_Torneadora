@@ -148,3 +148,23 @@ class DateFilterWidget(QWidget):
     def get_modo_texto(self) -> str:
         """Retorna o texto descritivo do modo atual."""
         return self.combo_modo.currentText()
+
+    def set_modo(self, modo_texto: str, data_ref: date = None):
+        """
+        Define programaticamente o modo de filtro e a data.
+        
+        Args:
+            modo_texto: "Dia", "Mês", "Ano" ou "Tudo"
+            data_ref: Data para setar no date_edit. Se None, usa data atual.
+        """
+        index = self.combo_modo.findText(modo_texto)
+        if index >= 0:
+            self.combo_modo.setCurrentIndex(index)
+        
+        if data_ref:
+            self.date_edit.setDate(data_ref)
+        elif modo_texto != "Tudo":
+            self.date_edit.setDate(QDate.currentDate())
+        
+        # Força atualização
+        self._on_modo_changed()

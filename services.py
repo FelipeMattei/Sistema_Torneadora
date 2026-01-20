@@ -13,11 +13,12 @@ from datetime import date, timedelta
 from typing import Optional, List
 
 from database import Database
-from models import Recebimento, Despesa, OrdemServico, FormaPagamento
+from models import Recebimento, Despesa, OrdemServico, FormaPagamento, Funcionario
 from repositories import (
     RecebimentoRepositorio,
     DespesaRepositorio,
     OrdemServicoRepositorio,
+    FuncionarioRepositorio
 )
 
 
@@ -63,6 +64,7 @@ class SistemaFinanceiro:
         self.recebimentos_repo = RecebimentoRepositorio(self.db)
         self.despesas_repo = DespesaRepositorio(self.db)
         self.os_repo = OrdemServicoRepositorio(self.db)
+        self.func_repo = FuncionarioRepositorio(self.db)
 
 
 
@@ -332,9 +334,52 @@ class SistemaFinanceiro:
     def atualizar_ordem_servico(self, os_: OrdemServico) -> None:
         self.os_repo.atualizar(os_)
 
-    def marcar_ordem_servico_como_paga(
-        self,
-        os_id: int,
-        forma_pagamento: Optional[FormaPagamento] = None
-    ) -> None:
         self.os_repo.marcar_como_pago(os_id, forma_pagamento)
+
+    
+    # -------------------------------------------------------------------------
+    # GESTÃO DE FUNCIONÁRIOS
+    # -------------------------------------------------------------------------
+
+    def registrar_funcionario(
+        self,
+        nome: str,
+        cpf: str,
+        telefone: str,
+        cargo: str,
+        data_admissao: date,
+        dia_pagamento: int,
+        foto_caminho: Optional[str] = None,
+        mes_decimo_terceiro: Optional[int] = None,
+        mes_ferias: Optional[int] = None
+    ) -> None:
+        """
+        Registra um novo funcionário.
+        """
+        func = Funcionario(
+            id=None,
+            nome=nome,
+            cpf=cpf,
+            telefone=telefone,
+            cargo=cargo,
+            foto_caminho=foto_caminho,
+            data_admissao=data_admissao,
+            dia_pagamento=dia_pagamento,
+            mes_decimo_terceiro=mes_decimo_terceiro,
+            mes_ferias=mes_ferias,
+            data_demissao=None
+        )
+        self.func_repo.criar(func)
+
+    def atualizar_funcionario(self, func: Funcionario) -> None:
+        """
+        Atualiza dados de um funcionário existente.
+        """
+        self.func_repo.atualizar(func)
+
+    def listar_funcionarios(self) -> List[Funcionario]:
+        """
+        Retorna todos os funcionários cadastrados.
+        """
+        return self.func_repo.listar_todos()
+

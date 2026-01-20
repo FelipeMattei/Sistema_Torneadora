@@ -61,6 +61,23 @@ class Database:
                 forma_pagamento TEXT
             )
         """)
+        
+        # Criar tabela de funcionários
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS funcionarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                cpf TEXT NOT NULL,
+                telefone TEXT,
+                cargo TEXT,
+                foto_caminho TEXT,
+                data_admissao TEXT NOT NULL,
+                dia_pagamento INTEGER NOT NULL,
+                mes_decimo_terceiro INTEGER,
+                mes_ferias INTEGER,
+                data_demissao TEXT
+            )
+        """)
 
 
         conn.commit()

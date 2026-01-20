@@ -88,3 +88,34 @@ class OrdemServico:
     data: date
     foi_pago: bool
     forma_pagamento: Optional[FormaPagamento] = None
+
+
+@dataclass
+class Funcionario:
+    """
+    Representa um funcionário.
+
+    Atributos:
+        id: Identificador único.
+        nome: Nome completo.
+        cpf: Cadastro de Pessoa Física.
+        telefone: Número de contato.
+        cargo: Cargo ou função na empresa.
+        foto_caminho: Caminho para o arquivo da foto.
+        data_admissao: Data de contratação.
+        dia_pagamento: Dia do mês para pagamento de salário.
+        mes_decimo_terceiro: Mês planejado/realizado para o 13º salário (1-12).
+        mes_ferias: Mês planejado/realizado para férias (1-12).
+        data_demissao: Data de saída (None se estiver ativo).
+    """
+    id: Optional[int]
+    nome: str
+    cpf: str
+    telefone: str
+    cargo: str
+    foto_caminho: Optional[str]
+    data_admissao: date
+    dia_pagamento: int
+    mes_decimo_terceiro: Optional[int] = None
+    mes_ferias: Optional[int] = None
+    data_demissao: Optional[date] = None

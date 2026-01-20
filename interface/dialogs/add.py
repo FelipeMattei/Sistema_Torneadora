@@ -19,45 +19,10 @@ from interface.helpers import (
     mapear_forma_pagamento, 
     _formatar_texto_moeda, 
     _texto_para_float_moeda, 
-    qdate_to_date
+    qdate_to_date,
+    EnterKeyFilter
 )
 from models import FormaPagamento
-
-# ===================== ENTER KEY FILTER =====================
-
-class EnterKeyFilter(QObject):
-    """
-    Filtro de evento para interceptar a tecla Enter em campos de entrada.
-    
-    Quando Enter é pressionado em um QLineEdit, move o foco para o próximo
-    widget na cadeia de foco, em vez de fechar/submeter o diálogo.
-    """
-    
-    def eventFilter(self, obj, event):
-        """
-        Intercepta eventos de teclado.
-        
-        Args:
-            obj: O widget que recebeu o evento
-            event: O evento
-            
-        Returns:
-            True se o evento foi tratado, False caso contrário
-        """
-        # Verifica se é um evento de tecla pressionada
-        if event.type() == QEvent.KeyPress:
-            # Verifica se a tecla é Enter ou Return
-            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
-                # Só intercepta se for um QLineEdit (ou similar)
-                if isinstance(obj, (QLineEdit,)):
-                    # Move para o próximo widget no foco
-                    next_widget = obj.nextInFocusChain()
-                    if next_widget:
-                        next_widget.setFocus()
-                    return True  # Evento tratado
-        
-        # Deixa o evento seguir normalmente
-        return super().eventFilter(obj, event)
 
 
 # ===================== BASE DIALOG (Opcional, mas ajuda a evitar repetição) =====================

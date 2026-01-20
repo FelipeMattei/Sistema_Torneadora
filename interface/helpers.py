@@ -8,7 +8,9 @@ Isso evita repetição de código e torna a lógica mais testável.
 
 from typing import Optional
 from datetime import date, timedelta
-from PySide6.QtCore import QDate
+from datetime import date, timedelta
+from PySide6.QtCore import QDate, QObject, QEvent, Qt
+from PySide6.QtWidgets import QLineEdit
 
 from models import FormaPagamento
 
@@ -171,3 +173,33 @@ def calcular_range_ano(ano: int) -> tuple[date, date]:
     fim = date(ano, 12, 31)
     
     return (inicio, fim)
+
+
+# ===================== FILTROS DE EVENTOS (UI) =====================
+
+class EnterKeyFilter(QObject):
+    """
+    Filtro de evento para interceptar a tecla Enter em campos de entrada.
+    
+    Quando Enter é pressionado em um QLineEdit, move o foco para o próximo
+    widget na cadeia de foco, em vez de fechar/submeter o diálogo.
+    """
+    
+    def eventFilter(self, obj, event):
+        """
+        Intercepta eventos de teclado.
+        """
+        # Verifica se é um evento de tecla pressionada
+        if event.type() == QEvent.KeyPress:
+            # Verifica se a tecla é Enter ou Return
+            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+                # Só intercepta se for um QLineEdit (ou similar)
+                if isinstance(obj, (QLineEdit,)):
+                    # Move para o próximo widget no foco
+                    next_widget = obj.nextInFocusChain()
+                    if next_widget:
+                        next_widget.setFocus()
+                    return True  # Evento tratado
+        
+        # Deixa o evento seguir normalmente
+        return super().eventFilter(obj, event)
