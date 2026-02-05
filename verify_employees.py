@@ -5,9 +5,9 @@ from datetime import date
 # Add current directory to path
 sys.path.append(os.getcwd())
 
-from database import Database
-from services import SistemaFinanceiro
-from models import Funcionario
+from app.database.connection import Database
+from app.services.finance_service import SistemaFinanceiro
+from app.models.entities import Funcionario
 
 def verify():
     print("Testing Employee Module Backend...")
